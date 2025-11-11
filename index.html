@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Attendance System Dashboard</title>
+    <style>
+        /* ----- Basic Reset ----- */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: white;
+            color: #b30000; /* Dark red text */
+        }
+
+        /* ----- Sidebar ----- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            height: 100vh;
+            background-color: #cc0000; /* Strong red */
+            color: white;
+            padding: 30px 20px 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-weight: bold;
+
+        }
+        .sidebar h2 {
+            margin: 0 0 30px;
+            font-size: 1.8rem;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            margin: 15px 0;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+            display: block;
+        }
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background-color: #990000;
+        }
+
+        .sidebar .exit {
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            padding: 10px 15px;
+            background-color: #e60000;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+            user-select: none;
+        }
+        .sidebar .exit:hover {
+            background-color: #990000;
+        }
+
+        /* ----- Main Content ----- */
+        .content {
+            margin-left: 220px;
+            padding: 35px 40px;
+            min-height: 100vh;
+            background-color: #fff5f5;
+        }
+
+        /* ----- Headings ----- */
+        h1 {
+            color: #000000;
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 2rem;
+            border-left: 5px solid #cc0000;
+            padding-left: 10px;
+        }
+
+        /* ----- Table Styling ----- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px 18px;
+            border-bottom: 1px solid #e60000;
+            text-align: left;
+            color: #000000;
+        }
+        th {
+            background-color: #ff0202;
+            color: rgb(255, 255, 255);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ----- Form Styling ----- */
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        form input[type="text"],
+        form input[type="date"],
+        form input[type="time"],
+        form select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 20px;
+            border: 2px solid #ff0000;
+            border-radius: 6px;
+            transition: border-color 0.3s;
+            font-size: 1rem;
+            color: #000000;
+        }
+        form input[type="text"]:focus,
+        form input[type="date"]:focus,
+        form input[type="time"]:focus,
+        form select:focus {
+            outline: none;
+            border-color: #ff0000;
+        }
+
+        /* ----- Button ----- */
+        button.btn {
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(204, 0, 0, 0.4);
+        }
+        button.btn:hover {
+            background-color: #990000;
+        }
+
+        /* ----- Table no records message ----- */
+        #attendanceBody tr td {
+            text-align: center;
+            font-style: italic;
+            color: #000000;
+            padding: 30px 0;
+        }
+
+        /* ----- Responsive ----- */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 15px 20px;
+                flex-direction: row;
+                justify-content: space-around;
+            }
+            .sidebar h2 {
+                display: none;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px 15px;
+            }
+            table, form input[type="text"], form input[type="date"], form input[type="time"], form select, button.btn {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <nav>
+            <a href="#" onclick="showSection('dashboard'); setActiveLink(event);" id="nav-dashboard" class="active">Dashboard</a>
+            <a href="#" onclick="showSection('attendance'); setActiveLink(event);" id="nav-attendance">Students Attendance</a>
+            <a href="#" onclick="showSection('settings'); setActiveLink(event);" id="nav-settings">Settings</a>
+            <a href="#" onclick="showSection('add_student'); setActiveLink(event);" id="nav-add_student">Add Student</a>
+        </nav>
+        <div class="exit" onclick="exitSystem()">Exit</div>
+    </div>
+
+    <div class="content">
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section active">
+            <h1>Dashboard</h1>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>SR-Code</th><th>Section</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>John Doe</td><td>SR001</td><td>1st Year</td></tr>
+                    <!-- More students can be added -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Attendance Section -->
+        <div id="attendance" class="section" style="display:none;">
+            <h1>Students Attendance</h1>
+            <form id="attendanceForm" onsubmit="markAttendance(event)">
+                <label for="sr_code">SR-Code</label>
+                <input type="text" id="sr_code" required />
+
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" required />
+
+                <label for="date">Date</label>
+                <input type="date" id="date" required />
+
+                <label for="status">Status</label>
+                <select id="status">
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                </select>
+
+                <label for="time_in">Time In</label>
+                <input type="time" id="time_in" />
+
+                <label for="time_out">Time Out</label>
+                <input type="time" id="time_out" />
+
+                <button class="btn" type="submit">Mark Attendance</button>
+            </form>
+            <h2>Attendance Records</h2>
+            <table id="attendanceTable">
+                <thead>
+                    <tr><th>Name</th><th>SR-Code</th><th>Subject</th><th>Date</th><th>Status</th><th>Time In</th><th>Time Out</th></tr>
+                </thead>
+                <tbody id="attendanceBody">
+                    <tr><td colspan="7">No attendance records yet.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Add Student Section -->
+        <div id="add_student" class="section" style="display:none;">
+            <h1>Add Student</h1>
+            <form onsubmit="addStudent(event)">
+                <label for="name">Name</label>
+                <input type="text" id="name" required />
+
+                <label for="sr_code_add">SR-Code</label>
+                <input type="text" id="sr_code_add" required />
+
+                <label for="section">Section</label>
+                <input type="text" id="section" required />
+
+                <button class="btn" type="submit">Add Student</button>
+            </form>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings" class="section" style="display:none;">
+            <h1>Settings</h1>
+            <button class="btn" style="background-color:#cc0000;" onclick="exitSystem()">Exit Attendance</button>
+        </div>
+    </div>
+
+    <script>
+        // Student data
+        const students = [
+            { name: "Add students", sr_code: "Add students", section: "Add students" },
+        ];
+
+        // Attendance records array
+        let attendanceRecords = [];
+
+        // Show only the selected section and update active link
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(sec => {
+                if (sec.id === sectionId) sec.style.display = '';
+                else sec.style.display = 'none';
+            });
+
+            updateAttendanceTable();
+        }
+
+        function setActiveLink(event) {
+            const links = document.querySelectorAll('.sidebar nav a');
+            links.forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // After marking attendance
+        function markAttendance(event) {
+            event.preventDefault();
+
+            const sr_code = document.getElementById('sr_code').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            const date = document.getElementById('date').value;
+            const status = document.getElementById('status').value;
+            const time_in = document.getElementById('time_in').value;
+            const time_out = document.getElementById('time_out').value;
+
+            // Find student by SR-Code
+            const student = students.find(s => s.sr_code.toLowerCase() === sr_code.toLowerCase());
+            if (!student) {
+                alert("Student SR-Code not found!");
+                return;
+            }
+
+            // Add new attendance record
+            attendanceRecords.push({
+                name: student.name,
+                sr_code: student.sr_code,
+                subject,
+                date,
+                status,
+                time_in,
+                time_out
+            });
+
+            // Clear form inputs
+            document.getElementById('attendanceForm').reset();
+
+            // Redirect to attendance view updated
+            updateAttendanceTable();
+        }
+
+        // Update attendance records table UI
+        function updateAttendanceTable() {
+            if (document.getElementById('attendance').style.display === 'none'){
+                // If attendance section hidden, no need to update table now  
+                return;
+            }
+
+            const tbody = document.getElementById('attendanceBody');
+            tbody.innerHTML = '';
+
+            if (attendanceRecords.length === 0) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 7;
+                td.style.textAlign = 'center';
+                td.style.fontStyle = 'italic';
+                td.style.color = '#aa0000';
+                td.textContent = "No attendance records yet.";
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+                return;
+            }
+
+            attendanceRecords.forEach(record => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${record.name}</td>
+                    <td>${record.sr_code}</td>
+                    <td>${record.subject}</td>
+                    <td>${record.date}</td>
+                    <td>${record.status}</td>
+                    <td>${record.time_in || ''}</td>
+                    <td>${record.time_out || ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Add student functionality
+        function addStudent(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const sr_code = document.getElementById('sr_code_add').value.trim();
+            const section = document.getElementById('section').value.trim();
+
+            // Check for duplicate name or sr_code
+            if (students.find(s => s.name.toLowerCase() === name.toLowerCase())) {
+                alert("Duplicate student name found!");
+                return;
+            }
+            if (students.find(s => s.sr_code.toLowerCase() === sr_code.toLowerCase())) {
+                alert("Duplicate SR-Code found!");
+                return;
+            }
+
+            // Add new student
+            students.push({ name, sr_code, section });
+
+            alert(`Student ${name} added!`);
+
+            // Clear add student form
+            event.target.reset();
+
+            // Optionally, refresh dashboard table by rebuilding it here or reload page
+            buildDashboardTable();
+
+            // Switch to dashboard
+            showSection('dashboard');
+            setActiveLink({target: document.getElementById('nav-dashboard')});
+        }
+
+        // Build dashboard student table dynamically
+        function buildDashboardTable() {
+            const tbody = document.querySelector('#dashboard table tbody');
+            tbody.innerHTML = '';
+            students.forEach(student => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${student.name}</td><td>${student.sr_code}</td><td>${student.section}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Exit system handler
+        function exitSystem() {
+            if (confirm("Are you sure you want to exit the attendance system?")) {
+                alert("Thank you! Closing system.");
+                // For actual usage:
+                // window.close() (may not work in all browsers)
+                // or redirect to another page or logout
+                // Here, we simulate by reloading to login screen or blank:
+                location.reload();
+            }
+        }
+
+        /* Initialize */
+        buildDashboardTable();
+        showSection('dashboard');
+        setActiveLink({target: document.getElementById('nav-dashboard')});
+    </script>
+</body>
+</html>
