@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Attendance System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: white;
+            color: #b30000;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            height: 100vh;
+            background-color: #cc0000;
+            color: white;
+            padding: 30px 20px 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-weight: bold;
+        }
+
+        .sidebar h2 {
+            margin: 0 0 30px;
+            font-size: 1.8rem;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            margin: 15px 0;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+            display: block;
+        }
+
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background-color: #990000;
+        }
+
+        .sidebar .exit {
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            padding: 10px 15px;
+            background-color: #e60000;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+            user-select: none;
+        }
+
+        .sidebar .exit:hover {
+            background-color: #990000;
+        }
+
+        .content {
+            margin-left: 220px;
+            padding: 35px 40px;
+            min-height: 100vh;
+            background-color: #fff5f5;
+        }
+
+        h1 {
+            color: #000000;
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 2rem;
+            border-left: 5px solid #cc0000;
+            padding-left: 10px;
+        }
+
+        button.btn {
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(204, 0, 0, 0.4);
+        }
+
+        button.btn:hover {
+            background-color: #990000;
+        }
+
+        .settings-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .settings-section p {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div>
+            <h2>Menu</h2>
+            <nav>
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('attendance') }}">Students Attendance</a>
+                <a href="{{ url_for('add_student') }}">Add Student</a>
+                <a href="{{ url_for('settings') }}" class="active">Settings</a>
+            </nav>
+        </div>
+        <a href="{{ url_for('logout') }}" class="exit" style="text-decoration: none; color: white;">Exit</a>
+    </div>
+
+    <div class="content">
+        <h1>Settings</h1>
+        
+        <div class="settings-section">
+            <p>System configuration and options will be available here.</p>
+            <a href="{{ url_for('logout') }}">
+                <button class="btn">Logout</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
