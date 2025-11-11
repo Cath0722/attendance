@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Attendance System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: white;
+            color: #b30000;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            height: 100vh;
+            background-color: #cc0000;
+            color: white;
+            padding: 30px 20px 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-weight: bold;
+        }
+
+        .sidebar h2 {
+            margin: 0 0 30px;
+            font-size: 1.8rem;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            margin: 15px 0;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+            display: block;
+        }
+
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background-color: #990000;
+        }
+
+        .sidebar .exit {
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            padding: 10px 15px;
+            background-color: #e60000;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+            user-select: none;
+        }
+
+        .sidebar .exit:hover {
+            background-color: #990000;
+        }
+
+        .content {
+            margin-left: 220px;
+            padding: 35px 40px;
+            min-height: 100vh;
+            background-color: #fff5f5;
+        }
+
+        h1 {
+            color: #000000;
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 2rem;
+            border-left: 5px solid #cc0000;
+            padding-left: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px 18px;
+            border-bottom: 1px solid #e60000;
+            text-align: left;
+            color: #000000;
+        }
+
+        th {
+            background-color: #ff0202;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .flash-message {
+            background-color: #ffdddd;
+            color: #cc0000;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div>
+            <h2>Menu</h2>
+            <nav>
+                <a href="{{ url_for('dashboard') }}" class="active">Dashboard</a>
+                <a href="{{ url_for('attendance') }}">Students Attendance</a>
+                <a href="{{ url_for('add_student') }}">Add Student</a>
+                <a href="{{ url_for('settings') }}">Settings</a>
+            </nav>
+        </div>
+        <a href="{{ url_for('logout') }}" class="exit" style="text-decoration: none; color: white;">Exit</a>
+    </div>
+
+    <div class="content">
+        <h1>Dashboard</h1>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>SR-Code</th>
+                    <th>Section</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if students %}
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student[0] }}</td>
+                        <td>{{ student[1] }}</td>
+                        <td>{{ student[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; font-style: italic;">No students added yet.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
